@@ -17,6 +17,8 @@ export const FormComponent = () => {
     const [showText, setShowText] = useState(true);
     // show pspinner
     const [spinner, setSpinner] = useState(false);
+    // shown load text
+    const [currentText, setCurrentText] = useState('Loading...')
 
 
     // useEffect(() => {
@@ -30,6 +32,21 @@ export const FormComponent = () => {
     //         reader.readAsDataURL(files);
     //     }
     // }, [files])
+
+    const text = ['Loading...','чтобы', 'не было', 'скучно'];
+    let index = 0;
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+        if (index == text.length){
+            index = 0;
+        }
+          setCurrentText(text[index]);
+          index ++;
+        }, 1000);
+    
+        return () => clearInterval(interval);
+      }, []);
 
 
     document.body.addEventListener('keydown', (event:any) => {
@@ -113,9 +130,12 @@ export const FormComponent = () => {
             }
 
             {spinner &&
-                <div className="spinner">
-                    <ClockLoader size={200} color="rgb(96, 11, 129)"/>
-                </div> 
+                <>
+                    <div className="spinner">
+                        <ClockLoader size={200} color="rgb(96, 11, 129)"/>
+                    </div> 
+                    <label className="text-helper">{currentText}</label>
+                </>
             }
         </div>
     )
