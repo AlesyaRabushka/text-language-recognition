@@ -84,7 +84,7 @@
 }
 
 .files-box{
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
 }
 

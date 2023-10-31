@@ -67,8 +67,8 @@ export const FormComponent = () => {
 
     const handleFileUpload = (e: any) => {
         const files = e.target.files;
+        
         setFiles(files);
-        console.log(files)
     }
 
     // start processing
@@ -110,7 +110,17 @@ export const FormComponent = () => {
                         onDrop={e => {
                             e.preventDefault();
                             let files = e.dataTransfer.files;
-                            setFiles(files)
+                            
+
+                            // check for pdf
+                            let fileName = files[0].name;
+                            const lastDot = fileName.lastIndexOf('.');
+                            const ext = fileName.substring(lastDot + 1);
+                            if (ext == 'pdf'){
+                                setFiles(files);
+                            }
+
+                            
                             setDrag(false);
                         }}
                     >
@@ -131,7 +141,7 @@ export const FormComponent = () => {
                             setDrag(true);
                         }}
                         >
-                        Перенесите файлы сюда или нажмите на кнопку
+                        Перенесите pdf-файлы сюда или нажмите на кнопку
                         <div className="input-box">
                             <label htmlFor="input-file" className="input-file-button">Выбрать файлы</label>
                             <input type="file" name="file" id="input-file" className="input" onChange={handleFileUpload} accept="application/pdf" multiple/>
