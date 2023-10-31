@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./FormComponent.css"
+import userEvent from "@testing-library/user-event";
+import { ClockLoader } from "react-spinners";
 
 
 export const FormComponent = () => {
@@ -8,6 +10,14 @@ export const FormComponent = () => {
     // uploaded file
     const [files, setFiles] = useState<FileList>();
     const [fileDataUrl, setFileDataUrl] = useState<string>('');
+
+    // spinner and proccesing
+    const [pressed, setPressed] = useState(false);
+    // show START button and helper text
+    const [showText, setShowText] = useState(true);
+    // show pspinner
+    const [spinner, setSpinner] = useState(false);
+
 
     // useEffect(() => {
     //     if (files){
@@ -21,14 +31,25 @@ export const FormComponent = () => {
     //     }
     // }, [files])
 
+
+    document.body.addEventListener('keydown', (event:any) => {
+        if (event.key == 'Enter'){
+            setPressed(true);
+            setShowText(false);
+            setSpinner(true);
+            // onSubmit(e);
+        }
+    })
+
     const handleFileUpload = (e: any) => {
         const files = e.target.files;
         setFiles(files);
         console.log(files)
     }
 
+
     return(
-        <div className="form-conponent">
+        <div className="form-component">
              {/* ----- DRAG & DROP area */}
              {drag ?
                     <div className="drag-area"
@@ -74,15 +95,27 @@ export const FormComponent = () => {
                             <input type="file" name="file" id="input-file" className="input" onChange={handleFileUpload} multiple/>
                             {
                                 files && 
-                                <div>
+                                <div className="files-box">
                                     <label>Selected files: {files.length}</label>
                                     <div className="files-name-box">
-                                        {Array.from(files).map(item => <label className="file-name">{item.name}</label>)}
+                                        {Array.from(files).map(item => <label>{item.name}</label>)}
                                     </div>
                                 </div>
                             }
                         </div>
                     </div>
+                 }
+            {showText && 
+                <div className="helper-labels">
+                    <label className="label-button">START</label>
+                    <label className="text-helper">Нажмите на кнопку START или нажмите ENTER</label>
+                </div>
+            }
+
+            {spinner &&
+                <div className="spinner">
+                    <ClockLoader size={200} color="rgb(96, 11, 129)"/>
+                </div> 
             }
         </div>
     )
