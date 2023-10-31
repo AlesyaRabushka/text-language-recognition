@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import "./FormComponent.css"
 import userEvent from "@testing-library/user-event";
 import { ClockLoader } from "react-spinners";
+import fileDownload from "js-file-download";
+import ClientServer from "../../clientService/client.service";
 
 
 export const FormComponent = () => {
@@ -11,14 +13,19 @@ export const FormComponent = () => {
     const [files, setFiles] = useState<FileList>();
     const [fileDataUrl, setFileDataUrl] = useState<string>('');
 
-    // spinner and proccesing
+    // spinner and processing
     const [pressed, setPressed] = useState(false);
     // show START button and helper text
     const [showText, setShowText] = useState(true);
     // show pspinner
     const [spinner, setSpinner] = useState(false);
     // shown load text
-    const [currentText, setCurrentText] = useState('Loading...')
+    const [currentText, setCurrentText] = useState('Loading...');
+
+    // results
+    const [result, setResult] = useState<File | undefined>(undefined);
+    // results boolean
+    const [ifResults, setIfResults] = useState(true);
 
 
     // useEffect(() => {
@@ -64,6 +71,24 @@ export const FormComponent = () => {
         console.log(files)
     }
 
+    // start processing
+    const handleStart = async () => {
+        setPressed(true);
+        setShowText(false);
+        setSpinner(true);
+        
+        const result = await ClientServer.uploadFiles();
+    }
+
+    // download result
+    const handleDownload = async() => {
+        const file = new File(['ехала белка', ' и в лужу упала'], "result.pdf", {type: "text/plain"});
+        setResult(file)
+        if (result){
+            fileDownload(result, `${result.name}`)
+        }
+    }
+
 
     return(
         <div className="form-component">
@@ -89,7 +114,7 @@ export const FormComponent = () => {
                             setDrag(false);
                         }}
                     >
-                        Отпустите картинку
+                        Отпустите файл
           
                     </div>
                 : <div className="drag-area"
@@ -109,7 +134,7 @@ export const FormComponent = () => {
                         Перенесите файлы сюда или нажмите на кнопку
                         <div className="input-box">
                             <label htmlFor="input-file" className="input-file-button">Выбрать файлы</label>
-                            <input type="file" name="file" id="input-file" className="input" onChange={handleFileUpload} multiple/>
+                            <input type="file" name="file" id="input-file" className="input" onChange={handleFileUpload} accept="application/pdf" multiple/>
                             {
                                 files && 
                                 <div className="files-box">
@@ -124,18 +149,23 @@ export const FormComponent = () => {
                  }
             {showText && 
                 <div className="helper-labels">
-                    <label className="label-button">START</label>
+                    <label className="label-button" onClick={handleStart}>START</label>
                     <label className="text-helper">Нажмите на кнопку START или нажмите ENTER</label>
                 </div>
             }
 
-            {spinner &&
+            { ifResults ?
                 <>
-                    <div className="spinner">
-                        <ClockLoader size={200} color="rgb(96, 11, 129)"/>
-                    </div> 
-                    <label className="text-helper">{currentText}</label>
+                <button type="button" className="input-file-button" onClick={handleDownload}>Сохранить результат</button>
                 </>
+            :
+                spinner &&
+                    <>
+                        <div className="spinner">
+                            <ClockLoader size={200} color="rgb(96, 11, 129)"/>
+                        </div> 
+                        <label className="text-helper">{currentText}</label>
+                    </>
             }
         </div>
     )

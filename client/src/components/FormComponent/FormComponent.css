@@ -109,6 +109,7 @@
 .label-button{
     color: white;
     font-size: 1.9em;
+    font-weight: 700;
 
     cursor: pointer;
 }
