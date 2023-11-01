@@ -4,6 +4,10 @@ import userEvent from "@testing-library/user-event";
 import { ClockLoader } from "react-spinners";
 import fileDownload from "js-file-download";
 import ClientServer from "../../clientService/client.service";
+import PDF from "../../helpers/pdf";
+
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { title } from "process";
 
 
 export const FormComponent = () => {
@@ -23,22 +27,10 @@ export const FormComponent = () => {
     const [currentText, setCurrentText] = useState('Loading...');
 
     // results
-    const [result, setResult] = useState<File | undefined>(undefined);
+    const [result, setResult] = useState<string>('');
     // results boolean
     const [ifResults, setIfResults] = useState(true);
 
-
-    // useEffect(() => {
-    //     if (files){
-    //         const reader = new FileReader();
-
-    //         reader.addEventListener("load", () => {
-    //             setFileDataUrl(reader.result as string);
-    //         });
-
-    //         reader.readAsDataURL(files);
-    //     }
-    // }, [files])
 
     const text = ['Loading...','чтобы', 'не было', 'скучно'];
     let index = 0;
@@ -61,14 +53,16 @@ export const FormComponent = () => {
             setPressed(true);
             setShowText(false);
             setSpinner(true);
-            // onSubmit(e);
+            handleFileUpload(event);
         }
     })
 
-    const handleFileUpload = (e: any) => {
+    const handleFileUpload = async (e: any) => {
         const files = e.target.files;
-        
         setFiles(files);
+
+        // ?
+        const result = await ClientServer.uploadFiles();
     }
 
     // start processing
@@ -80,14 +74,7 @@ export const FormComponent = () => {
         const result = await ClientServer.uploadFiles();
     }
 
-    // download result
-    const handleDownload = async() => {
-        const file = new File(['ехала белка', ' и в лужу упала'], "result.pdf", {type: "text/plain"});
-        setResult(file)
-        if (result){
-            fileDownload(result, `${result.name}`)
-        }
-    }
+ 
 
 
     return(
@@ -166,7 +153,16 @@ export const FormComponent = () => {
 
             { ifResults ?
                 <>
-                <button type="button" className="input-file-button" onClick={handleDownload}>Сохранить результат</button>
+                    <div className="results-box">
+                        {result}
+                    </div>
+                
+                    <button type="button" className="input-file-button">
+                        <PDFDownloadLink document={<PDF props={{title:'Results', text: `${result}`}} />} fileName="result" style={{textDecoration:"none", color:"white"}}>
+                            Сохранить результат
+                        </PDFDownloadLink>
+                    </button>
+                
                 </>
             :
                 spinner &&

@@ -62,6 +62,7 @@
 
     border-radius: 20px;
     box-shadow: 1px 3px #080d58;
+    /* color: #fcf8fd; */
     border: none;
     outline: none;
     
@@ -81,6 +82,8 @@
 
 .input-file-button:hover{
     background-color: rgb(179, 48, 231);
+
+    ;
 }
 
 .files-box{
@@ -128,6 +131,16 @@
 
     transform: scale(1);
     animation: pulse 1s infinite;
+}
+
+.results-box{
+    width: calc(50%);
+    min-height: 150px;
+
+    border-radius: 20px;
+    border: 1px solid rgb(73, 10, 131);
+
+    background-color: aliceblue;
 }
 
 @keyframes pulse {
