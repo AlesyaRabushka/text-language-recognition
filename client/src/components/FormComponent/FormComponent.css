@@ -134,13 +134,33 @@
 }
 
 .results-box{
-    width: calc(50%);
-    min-height: 150px;
+    width: calc(40%);
+    min-height: 100px;
+
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
+
+.result-item{
+    width: calc(100%);
+    min-height: 50px;
 
     border-radius: 20px;
     border: 1px solid rgb(73, 10, 131);
 
     background-color: aliceblue;
+
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+
+    padding-top: calc(2%);
+    padding-left: calc(5%);
+
+    margin-bottom: calc(2%);
 }
 
 @keyframes pulse {

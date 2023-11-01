@@ -1,4 +1,4 @@
-import {Document, StyleSheet, Page, View, Text} from "@react-pdf/renderer";
+import {Document, StyleSheet, Page, View, Text, } from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
   page: {
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 
 interface propsPDF{
   title: string,
-  text: string,
+  text: Array<any>,
 }
 
 const PDF = ({props}:{props:propsPDF}) => {
@@ -25,7 +25,7 @@ const PDF = ({props}:{props:propsPDF}) => {
           <Text>{props.title}</Text>
         </View>
         <View style={styles.section}>
-          <Text>{props.text}</Text>
+          <Text>здесб результат в идеале</Text>
         </View>
       </Page>
     </Document>

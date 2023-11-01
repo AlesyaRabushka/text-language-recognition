@@ -24,9 +24,9 @@ export const FormComponent = () => {
     const [currentText, setCurrentText] = useState('Loading...');
 
     // results
-    const [result, setResult] = useState<string>('');
+    const [result, setResult] = useState<any>([{}]);
     // results boolean
-    const [ifResults, setIfResults] = useState(true);
+    const [ifResults, setIfResults] = useState(false);
 
 
     const text = ['Loading...','чтобы', 'не было', 'скучно'];
@@ -51,16 +51,13 @@ export const FormComponent = () => {
             setShowText(false);
             setSpinner(true);
             handleFileUpload(event);
+            handleStart();
         }
     })
 
     const handleFileUpload = async (e: any) => {
         const files = e.target.files;
-        console.log('HERE')
         setFiles(files);
-
-        // ?
-        // const result = await ClientService.uploadFiles();
     }
 
     // start processing
@@ -68,22 +65,17 @@ export const FormComponent = () => {
         setPressed(true);
         setShowText(false);
         setSpinner(true);
+
         
-        const result = await ClientService.startProcessing();
+        const results = await ClientService.startProcessing(files);
+        
+        setResult(() => results);
+        console.log(result);
+        setIfResults(true);
+        setSpinner(false);
+        
     }
 
-
-    const checkPDF = (file: File) => {
-        let fileName = file.name;
-        console.log(fileName)
-        const lastDot = fileName.lastIndexOf('.');
-        const ext = fileName.substring(lastDot + 1);
-        console.log(ext)
-        if (ext == 'pdf'){
-            return true;
-        }
-    }
- 
 
 
     return(
@@ -161,12 +153,18 @@ export const FormComponent = () => {
             { ifResults ?
                 <>
                     <div className="results-box">
-                        {result}
+                        {result.map((item:any) => 
+                            <div className="result-item">
+                                <label style={{fontSize: "1.5em"}}>{item.name}</label>
+                                <label>{item.result}</label>
+                            </div>
+                            
+                        )}
                     </div>
                 
                     <button type="button" className="input-file-button">
-                        <PDFDownloadLink document={<PDF props={{title:'Results', text: `${result}`}} />} fileName="result" style={{textDecoration:"none", color:"white"}}>
-                            Сохранить результат
+                        <PDFDownloadLink document={<PDF props={{title:'Results', text: result}} />} fileName="tetx-recognition-result" style={{textDecoration:"none", color:"white"}}>
+                            Сохранить результат в PDF
                         </PDFDownloadLink>
                     </button>
                 
