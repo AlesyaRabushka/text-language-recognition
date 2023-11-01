@@ -1,20 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import "./FormComponent.css"
-import userEvent from "@testing-library/user-event";
 import { ClockLoader } from "react-spinners";
-import fileDownload from "js-file-download";
-import ClientServer from "../../clientService/client.service";
+import ClientService from "../../clientService/client.service";
 import PDF from "../../helpers/pdf";
 
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { title } from "process";
+import { PDFDownloadLink, pdf } from "@react-pdf/renderer";
 
 
 export const FormComponent = () => {
     // DRAG & DROP
     const [drag, setDrag] = useState(false);
     // uploaded file
-    const [files, setFiles] = useState<FileList>();
+    const [files, setFiles] = useState<Array<File>>([]);
     const [fileDataUrl, setFileDataUrl] = useState<string>('');
 
     // spinner and processing
@@ -59,10 +56,11 @@ export const FormComponent = () => {
 
     const handleFileUpload = async (e: any) => {
         const files = e.target.files;
+        console.log('HERE')
         setFiles(files);
 
         // ?
-        const result = await ClientServer.uploadFiles();
+        // const result = await ClientService.uploadFiles();
     }
 
     // start processing
@@ -71,9 +69,20 @@ export const FormComponent = () => {
         setShowText(false);
         setSpinner(true);
         
-        const result = await ClientServer.uploadFiles();
+        const result = await ClientService.startProcessing();
     }
 
+
+    const checkPDF = (file: File) => {
+        let fileName = file.name;
+        console.log(fileName)
+        const lastDot = fileName.lastIndexOf('.');
+        const ext = fileName.substring(lastDot + 1);
+        console.log(ext)
+        if (ext == 'pdf'){
+            return true;
+        }
+    }
  
 
 
@@ -98,16 +107,14 @@ export const FormComponent = () => {
                             e.preventDefault();
                             let files = e.dataTransfer.files;
                             
-
-                            // check for pdf
-                            let fileName = files[0].name;
-                            const lastDot = fileName.lastIndexOf('.');
-                            const ext = fileName.substring(lastDot + 1);
-                            if (ext == 'pdf'){
-                                setFiles(files);
+                            const arr: Array<File> = []
+                            for (let i = 0; i < files.length; i++){
+                                console.log(files[i].type)
+                                if (files[i].type == 'application/pdf'){
+                                    arr.push(files[i]);
+                                }
                             }
-
-                            
+                            setFiles(arr);
                             setDrag(false);
                         }}
                     >
