@@ -18,24 +18,17 @@ export default class ClientService{
 
     static async startProcessing(files:Array<File>) {
         try {
-            const fd = new FormData();
+            const filesData = new FormData();
             for (let i = 0; i < files.length; i++){
-                fd.append(`file${i}`, files[i]);
+                filesData.append(`file${i}`, files[i]);
             }
-            console.log(fd)
+            console.log('file data',files)
 
-            // const response = await $host.post('/file-processing', {fd});
+            const response = await $host.post('/file-processing', files);
 
-            // return response.data;
-
-            const arr = [
-                {name:"file.pdf", result:"такой-то язык такое-то сходство"},
-                {name:"file2.pdf", result:"такой-то язык такое-то сходство"}
-            ]
-
-            return arr;
+            return response.data;
         } catch (error) {
-            console.log('[Client Service] getResult error', error);
+            console.log('[Client Service] startProcessing error', error);
 
             throw error;
         }

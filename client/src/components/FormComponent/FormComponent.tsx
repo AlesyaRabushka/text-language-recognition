@@ -27,6 +27,8 @@ export const FormComponent = () => {
     const [result, setResult] = useState<any>([{}]);
     // results boolean
     const [ifResults, setIfResults] = useState(false);
+    // show file text or do not
+    const [showFileText, setShowFileText] = useState(false);
 
 
     const text = ['Loading...','чтобы', 'не было', 'скучно'];
@@ -152,11 +154,19 @@ export const FormComponent = () => {
 
             { ifResults ?
                 <>
+                    {showFileText ? 
+                        <label className="show-text-button" onClick={e => setShowFileText(!showFileText)}>Hide files content</label> 
+                        : 
+                        <label className="show-text-button" onClick={e => setShowFileText(!showFileText)}>Show files content</label>
+                    }
                     <div className="results-box">
                         {result.map((item:any) => 
                             <div className="result-item">
                                 <label style={{fontSize: "1.5em"}}>{item.name}</label>
                                 <label>{item.result}</label>
+                                {
+                                    showFileText && <label>{item.text}</label>
+                                }
                             </div>
                             
                         )}
