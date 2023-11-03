@@ -22,4 +22,18 @@ export class AppController {
       throw error;
     }
   }
+
+  @Post('/generate-pdf-data')
+  async generatePdfData(@Body() resultData: Array<any>, @Res() res: Response){
+    try {
+      console.log(resultData)
+      const result = await this.appService.generatePdfData(resultData);
+
+      res.status(HttpStatus.OK).json(result);
+    } catch (error) {
+      console.log('[Controller] generatePdfdata error', error);
+
+      throw error;
+    }
+  }
 }

@@ -1,4 +1,12 @@
-import {Document, StyleSheet, Page, View, Text, } from "@react-pdf/renderer";
+import {Document, StyleSheet, Page, View, Text, Font, } from "@react-pdf/renderer";
+
+
+Font.register({
+  family: "Roboto",
+  src:
+    "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-medium-webfont.ttf"
+});
+
 
 const styles = StyleSheet.create({
   page: {
@@ -8,13 +16,14 @@ const styles = StyleSheet.create({
   section: {
     margin: 10,
     padding: 10,
-    textAlign: 'center',
+    textAlign: 'left',
+    fontFamily: 'Roboto',
   }
 });
 
 interface propsPDF{
   title: string,
-  text: Array<any>,
+  result: string,
 }
 
 const PDF = ({props}:{props:propsPDF}) => {
@@ -25,7 +34,7 @@ const PDF = ({props}:{props:propsPDF}) => {
           <Text>{props.title}</Text>
         </View>
         <View style={styles.section}>
-          <Text>здесб результат в идеале</Text>
+          <Text>{props.result}</Text>
         </View>
       </Page>
     </Document>

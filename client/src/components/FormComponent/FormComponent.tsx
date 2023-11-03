@@ -25,6 +25,8 @@ export const FormComponent = () => {
 
     // results
     const [result, setResult] = useState<any>([{}]);
+    // for pdf results
+    const [pdfResult, setPdfResult] = useState<string>('');
     // results boolean
     const [ifResults, setIfResults] = useState(false);
     // show file text or do not
@@ -72,10 +74,12 @@ export const FormComponent = () => {
         const results = await ClientService.startProcessing(files);
         
         setResult(() => results);
-        console.log(result);
         setIfResults(true);
         setSpinner(false);
+        console.log(result);
         
+        const pdfResponse = await ClientService.generatePdfData(results);
+        setPdfResult(() => pdfResponse);
     }
 
 
@@ -173,7 +177,7 @@ export const FormComponent = () => {
                     </div>
                 
                     <button type="button" className="input-file-button">
-                        <PDFDownloadLink document={<PDF props={{title:'Results', text: result}} />} fileName="tetx-recognition-result" style={{textDecoration:"none", color:"white"}}>
+                        <PDFDownloadLink document={<PDF props={{title:'Results', result: pdfResult}} />} fileName="text-recognition-result" style={{textDecoration:"none", color:"white"}}>
                             Сохранить результат в PDF
                         </PDFDownloadLink>
                     </button>

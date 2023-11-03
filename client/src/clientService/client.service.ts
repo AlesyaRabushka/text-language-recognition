@@ -33,4 +33,16 @@ export default class ClientService{
             throw error;
         }
     }
+
+    static async generatePdfData(resultData: Array<any>){
+        try {
+            const result = await $host.post('/generate-pdf-data', resultData);
+
+            return result.data;
+        } catch (error) {
+            console.log('[Client Service] generatePdfData error', error);
+
+            throw error;
+        }
+    }
 }

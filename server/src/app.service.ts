@@ -18,4 +18,19 @@ export class AppService {
       throw error;
     }
   }
+
+  async generatePdfData(resultData: Array<any>){
+    try {
+      let resultStr = '';
+      for (let i = 0; i < resultData.length; i++){
+        resultStr += `${resultData[i].name}\n${resultData[i].result}\n\n`;
+      }
+
+      return resultStr;
+    } catch (error) {
+      console.log('[Service] generatePdfData error', error);
+
+      throw error;
+    }
+  }
 }
